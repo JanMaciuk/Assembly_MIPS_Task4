@@ -7,15 +7,15 @@
 	global_array: .word 1,2,3,4,5,6,7,8,9,10	# Array do zsumowania
 # ============================================
 .text
-# czynnoœci inicjalizacyjne:
-sw $sp, sys_stack_addr	# Zachowanie adresu stosu systemowego
-la $sp, stack+STACK_SIZE	# Zainicjowanie obszaru stosu
+	# czynnoœci inicjalizacyjne:
+	sw $sp, sys_stack_addr	# Zachowanie adresu stosu systemowego
+	la $sp, stack+STACK_SIZE	# Zainicjowanie obszaru stosu
 
-#Wykonanie wlasciwego programu:
-jal main			# Wykonuje main i zapisuje $ra
-lw $sp, sys_stack_addr	# Odtworzenie wskaŸnika stosu systemowego
-li $v0, 10
-syscall 			# Koniec programu
+	#Wykonanie wlasciwego programu:
+	jal main			# Wykonuje main i zapisuje $ra
+	lw $sp, sys_stack_addr	# Odtworzenie wskaŸnika stosu systemowego
+	li $v0, 10
+	syscall 			# Koniec programu
 
 
 main:
@@ -29,7 +29,7 @@ main:
 	li   $t0, 10 		# Zapsiuje array_size
 	subi $sp, $sp, 4 	# Przesuwam $sp przed zapisem
 	sw   $t0, ($sp)		# Zapsiuje array_size na stosie 
-	# Zapis specjalnie bez optymalizacji, moglibyœmy zmieniaæ wartosc $sp tylko raz rezerwujac cale miejsce na poczatku
+	# Zapis specjalnie bez optymalizacji jak w poleceniu, moglibyœmy zmieniaæ wartosc $sp tylko raz rezerwujac cale miejsce na poczatku
 	
 	jal  sum			# Wywoluje podprogram i zapisuje obecny adres w $ra
 	lw   $a0, ($sp)		# Pobieram wartosc powrotu podprogramu
@@ -38,7 +38,7 @@ main:
 	syscall			# Wyswietlam sume pobrana ze stosu
 # koniec podprogramu main: (powrot do $ra)
 	lw $ra ($sp)		# Pobieram return adress ze stosu
-	jr $ra			# Powrot
+	jr $ra			# Koniec main, powrot.
 	
 
 sum:
@@ -66,8 +66,6 @@ sum:
 		sw   $t0, 0($sp)			# zapisuje wartosc i na stosie
 		
 		bgez $t0 petla 			# while (i>=0)
-	
-	
 	
 	# Zakonczenie podprogramu:
 	lw   $t0, 4($sp)		# Pobieram wartosc zmiennej lokalnej s
